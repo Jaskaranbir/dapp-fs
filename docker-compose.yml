@@ -13,4 +13,4 @@ services:
     image: dapp-fs-test
     build:
       context: .
-      dockerfile: Dockerfile.test
+      dockerfile: .github/workflows/Dockerfile

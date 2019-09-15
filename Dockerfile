@@ -17,4 +17,4 @@ FROM scratch
 LABEL maintainer="Jaskaranbir Dhillon"
 
 COPY --from=builder /app ./
-ENTRYPOINT ["./app"]
+CMD ["./app"]
