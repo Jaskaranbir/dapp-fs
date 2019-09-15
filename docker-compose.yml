@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  dapp-fs:
+    image: dapp-fs
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  # Runs unit tests
+  # (might remove later)
+  dapp-fs-test:
+    image: dapp-fs-test
+    build:
+      context: .
+      dockerfile: Dockerfile.test
