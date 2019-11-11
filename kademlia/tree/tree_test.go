@@ -173,6 +173,23 @@ var _ = Describe("RedBlackTree", func() {
 			insertAndVerify(25)
 		})
 
+		It("returns false on duplicate insertion", func () {
+			result := t.Insert(NewNode(10, nil))
+			Expect(result).To(BeTrue())
+
+			result = t.Insert(NewNode(15, nil))
+			Expect(result).To(BeTrue())
+
+			// Duplicate value
+			result = t.Insert(NewNode(10, nil))
+			Expect(result).To(BeFalse())
+
+			result = t.Insert(NewNode(20, nil))
+			Expect(result).To(BeTrue())
+
+			Expect(verifyTree(t)).To(Succeed())
+		})
+
 		It("handles left-rotation", func() {
 			insertAndVerify(10)
 
@@ -215,6 +232,42 @@ var _ = Describe("RedBlackTree", func() {
 			insertAndVerify(-20)
 			insertAndVerify(-15)
 			insertAndVerify(-13)
+		})
+
+		It("handles handles generic insertion", func() {
+			insertAndVerify(54)
+			insertAndVerify(51)
+			insertAndVerify(55)
+			insertAndVerify(33)
+			insertAndVerify(30)
+			insertAndVerify(20)
+			insertAndVerify(19)
+			insertAndVerify(57)
+			insertAndVerify(56)
+			insertAndVerify(58)
+			insertAndVerify(40)
+			insertAndVerify(32)
+			insertAndVerify(13)
+			insertAndVerify(14)
+			insertAndVerify(31)
+			insertAndVerify(18)
+			insertAndVerify(52)
+			insertAndVerify(59)
+			insertAndVerify(60)
+			insertAndVerify(50)
+			insertAndVerify(16)
+			insertAndVerify(-3)
+			insertAndVerify(100)
+			insertAndVerify(53)
+			insertAndVerify(92)
+			insertAndVerify(70)
+			insertAndVerify(12)
+			insertAndVerify(11)
+			insertAndVerify(15)
+			insertAndVerify(192)
+			insertAndVerify(200)
+			insertAndVerify(204)
+			insertAndVerify(1)
 		})
 	})
 })
