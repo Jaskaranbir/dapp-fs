@@ -62,59 +62,7 @@ var _ = Describe("Tree Insert-Operation", func() {
     Expect(verifyTree(t)).To(Succeed())
   })
 
-  It("handles left-rotation", func() {
-    t.Insert(NewNode(10, nil))
-
-    t.Insert(NewNode(-10, nil))
-    t.Insert(NewNode(7, nil))
-
-    t.Insert(NewNode(20, nil))
-    t.Insert(NewNode(15, nil))
-    t.Insert(NewNode(13, nil))
-
-    Expect(verifyTree(t)).To(Succeed())
-  })
-
-  It("handles right-rotation", func() {
-    t.Insert(NewNode(10, nil))
-
-    t.Insert(NewNode(-10, nil))
-    t.Insert(NewNode(7, nil))
-
-    t.Insert(NewNode(20, nil))
-    t.Insert(NewNode(15, nil))
-    t.Insert(NewNode(13, nil))
-
-    Expect(verifyTree(t)).To(Succeed())
-  })
-
-  It("handles left-right-rotation", func() {
-    t.Insert(NewNode(10, nil))
-
-    t.Insert(NewNode(-10, nil))
-    t.Insert(NewNode(7, nil))
-
-    t.Insert(NewNode(20, nil))
-    t.Insert(NewNode(15, nil))
-    t.Insert(NewNode(17, nil))
-
-    Expect(verifyTree(t)).To(Succeed())
-  })
-
-  It("handles right-left-rotation", func() {
-    t.Insert(NewNode(10, nil))
-
-    t.Insert(NewNode(20, nil))
-    t.Insert(NewNode(17, nil))
-
-    t.Insert(NewNode(-20, nil))
-    t.Insert(NewNode(-15, nil))
-    t.Insert(NewNode(-13, nil))
-
-    Expect(verifyTree(t)).To(Succeed())
-  })
-
-  It("handles handles generic insertion", func() {
+  It("handles generic insertion", func() {
     t.Insert(NewNode(54, nil))
     t.Insert(NewNode(51, nil))
     t.Insert(NewNode(55, nil))
