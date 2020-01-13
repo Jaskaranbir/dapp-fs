@@ -174,10 +174,6 @@ func (t *Tree) rightLeftRotate(grandParent *Node) {
 	t.leftRotate(grandParent)
 }
 
-func (t *Tree) Contains(key int) bool {
-	return t.FindNode(key, t.root) != nil
-}
-
 func (t *Tree) String() {
 	t.string(t.root)
 }
@@ -197,10 +193,7 @@ func (t *Tree) string(node *Node) {
 
 func (t *Tree) FindNode(key int, root *Node) *Node {
 	if root == nil {
-		if t.root == nil {
-			return nil
-		}
-		root = t.root
+		return nil
 	}
 	if key == root.key {
 		return root
@@ -250,6 +243,9 @@ func (t *Tree) InorderSuccessor(node *Node) *Node {
 	if node.right != nil {
 		return t.Min(node.right)
 	}
+	if node.parent == nil {
+		return nil
+	}
 
 	// Last left-ancestor
 	lastLeftNode := node.parent
@@ -271,20 +267,23 @@ func (t *Tree) InorderPredeccessor(node *Node) *Node {
 	if node.left != nil {
 		return t.Max(node.left)
 	}
+	if node.parent == nil {
+		return nil
+	}
 
-	// Last right-ancestor
+	// Find Last right-ancestor
 	lastRightNode := node.parent
-	for lastRightNode.isLeftChild && lastRightNode.parent != nil {
+	for !lastRightNode.isLeftChild && lastRightNode.parent != nil {
 		lastRightNode = lastRightNode.parent
 	}
 
-	if node.isLeftChild {
-		return lastRightNode.parent
+	if lastRightNode.key > node.key {
+		return nil
 	}
 	return lastRightNode
 }
 
-func (t *Tree) Remove(node *Node) error {
+func (t *Tree) Delete(node *Node) error {
 	if node == nil {
 		err := errors.New("nil node")
 		return errors.Wrap(err, "error removing node")
@@ -320,7 +319,7 @@ func (t *Tree) Remove(node *Node) error {
 		predeccessor := t.InorderPredeccessor(node)
 		node.key = predeccessor.key
 		node.value = predeccessor.value
-		return t.Remove(predeccessor)
+		return t.Delete(predeccessor)
 	}
 
 	// Only Left-Child
@@ -378,7 +377,7 @@ func (t *Tree) Remove(node *Node) error {
 
 func (t *Tree) correctDeletion(node *Node) error {
 	sibling := node.Sibling()
-	// Parent is Red, and Sibling and Nephews are Null/Black
+	// Parent is Red, and Sibling and Nephews are Nil/Black
 	if !node.parent.isBlack && sibling.isBlack &&
 		(sibling.left == nil || sibling.left.isBlack) &&
 		(sibling.right == nil || sibling.right.isBlack) {
@@ -389,7 +388,7 @@ func (t *Tree) correctDeletion(node *Node) error {
 	}
 
 	// Parent is Red and Sibling is Black,
-	// and one of the Newphews is Red
+	// and one of the Nephews is Red
 	if !node.parent.isBlack && sibling.isBlack {
 		// Node is left, Sibling has Red-Right-child
 		if node.isLeftChild && sibling.right != nil && !sibling.right.isBlack {
