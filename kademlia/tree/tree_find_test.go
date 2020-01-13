@@ -52,6 +52,7 @@ var _ = Describe("Tree Find-Operations", func() {
     for _, node := range nodesArr {
       t.Insert(node)
     }
+    Expect(verifyTree(t)).To(Succeed())
   })
 
   Describe("FindNode", func() {

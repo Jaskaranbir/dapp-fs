@@ -12,52 +12,61 @@ var _ = Describe("Tree Insert-Operation", func() {
     t = &Tree{}
   })
 
-  It("returns false if node is nil", func() {
-    result := t.Insert(nil)
-    Expect(result).To(BeFalse())
+  It("returns error if node is nil", func() {
+    err := t.Insert(nil)
+    Expect(err).Should(HaveOccurred())
   })
 
   It("sets first-node as root and sets node-properties", func() {
     node := NewNode(0, nil)
     node.isBlack = false
     node.tree = nil
-    result := t.Insert(node)
+    err := t.Insert(node)
 
-    Expect(result).To(BeTrue())
+    Expect(err).ShouldNot(HaveOccurred())
     Expect(t.root).To(Equal(node))
     Expect(node.isBlack).To(BeTrue())
     Expect(node.tree).To(Equal(t))
   })
 
   It("balances red-red", func() {
-    t.Insert(NewNode(10, nil))
+    err := t.Insert(NewNode(10, nil))
+    Expect(err).ShouldNot(HaveOccurred())
 
-    t.Insert(NewNode(-10, nil))
-    t.Insert(NewNode(-20, nil))
-    t.Insert(NewNode(6, nil))
-    t.Insert(NewNode(2, nil))
-    t.Insert(NewNode(4, nil))
+    err = t.Insert(NewNode(-10, nil))
+    Expect(err).ShouldNot(HaveOccurred())
+    err = t.Insert(NewNode(-20, nil))
+    Expect(err).ShouldNot(HaveOccurred())
+    err = t.Insert(NewNode(6, nil))
+    Expect(err).ShouldNot(HaveOccurred())
+    err = t.Insert(NewNode(2, nil))
+    Expect(err).ShouldNot(HaveOccurred())
+    err = t.Insert(NewNode(4, nil))
+    Expect(err).ShouldNot(HaveOccurred())
 
-    t.Insert(NewNode(20, nil))
-    t.Insert(NewNode(15, nil))
-    t.Insert(NewNode(25, nil))
+    err = t.Insert(NewNode(20, nil))
+    Expect(err).ShouldNot(HaveOccurred())
+    err = t.Insert(NewNode(15, nil))
+    Expect(err).ShouldNot(HaveOccurred())
+    err = t.Insert(NewNode(25, nil))
+    Expect(err).ShouldNot(HaveOccurred())
 
     Expect(verifyTree(t)).To(Succeed())
   })
 
-  It("returns false on duplicate insertion", func() {
-    result := t.Insert(NewNode(10, nil))
-    Expect(result).To(BeTrue())
+  It("returns error on duplicate insertion", func() {
+    err := t.Insert(NewNode(10, nil))
+    Expect(err).ShouldNot(HaveOccurred())
 
-    result = t.Insert(NewNode(15, nil))
-    Expect(result).To(BeTrue())
+    err = t.Insert(NewNode(15, nil))
+    Expect(err).ShouldNot(HaveOccurred())
 
     // Duplicate value
-    result = t.Insert(NewNode(10, nil))
-    Expect(result).To(BeFalse())
+    err = t.Insert(NewNode(10, nil))
+    Expect(err).Should(HaveOccurred())
 
-    result = t.Insert(NewNode(20, nil))
-    Expect(result).To(BeTrue())
+    err = t.Insert(NewNode(20, nil))
+    Expect(err).ShouldNot(HaveOccurred())
 
     Expect(verifyTree(t)).To(Succeed())
   })
