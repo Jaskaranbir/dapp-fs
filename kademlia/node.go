@@ -1,24 +1,24 @@
 package kademlia
 
 import (
-	"time"
+  "time"
 )
 
 type Node struct {
-	id   ID
-	addr string
+  id   ID
+  addr string
 
-	lastSeen   int64
-	staleCount int
+  lastSeen   int64
+  staleCount int
 }
 
 func NewNode() (*Node, error) {
-	node := &Node{
-		staleCount: 0,
-	}
-	node.UpdateSeen()
-	node.ResetStaleCount()
-	return node, nil
+  node := &Node{
+    staleCount: 0,
+  }
+  node.UpdateSeen()
+  node.ResetStaleCount()
+  return node, nil
 }
 
 // func NewNodeWithPublicKey(publicKey []byte) (*Node, error) {
@@ -39,21 +39,21 @@ func NewNode() (*Node, error) {
 // }
 
 func (n *Node) Addr() string {
-	return n.addr
+  return n.addr
 }
 
 func (n *Node) ID() ID {
-	return n.id
+  return n.id
 }
 
 func (n *Node) UpdateSeen() {
-	n.lastSeen = time.Now().UnixNano() / int64(time.Millisecond)
+  n.lastSeen = time.Now().UnixNano() / int64(time.Millisecond)
 }
 
 func (n *Node) LastSeen() int64 {
-	return n.lastSeen
+  return n.lastSeen
 }
 
 func (n *Node) ResetStaleCount() {
-	n.staleCount = 0
+  n.staleCount = 0
 }

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"log"
+  "log"
 
-	"github.com/Jaskaranbir/dapp-fs/kademlia/tree"
+  "github.com/Jaskaranbir/dapp-fs/kademlia/tree"
 )
 
 func main() {
-	t := &tree.Tree{}
-	log.Println(t)
+  t := &tree.Tree{}
+  log.Println(t)
 }
