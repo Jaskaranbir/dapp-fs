@@ -53,6 +53,7 @@ var _ = Describe("Tree Find-Operations", func() {
       t.Insert(node)
     }
     Expect(verifyTree(t)).To(Succeed())
+    Expect(t.size).To(Equal(len(nodes)))
   })
 
   Describe("FindNode", func() {

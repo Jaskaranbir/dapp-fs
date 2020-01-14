@@ -5,11 +5,11 @@ import "github.com/pkg/errors"
 func (t *Tree) Delete(node *Node) error {
   if node == nil {
     err := errors.New("nil node")
-    return errors.Wrap(err, "error removing node")
+    return errors.Wrap(err, "error deleting node")
   }
   if node.tree != t {
     err := errors.New("node doesn't belong to this tree")
-    return errors.Wrap(err, "error removing node")
+    return errors.Wrap(err, "error deleting node")
   }
 
   // No Children
@@ -17,6 +17,7 @@ func (t *Tree) Delete(node *Node) error {
     // All nodes deleted from Tree :(
     if node == t.root {
       t.root = nil
+      t.size = 0
       return nil
     }
 
@@ -27,9 +28,10 @@ func (t *Tree) Delete(node *Node) error {
     }
     if node.isBlack {
       // Extra Black-node case
-      return t.correctDeletion(node)
+      t.correctDeletion(node)
     }
 
+    t.size--
     return nil
   }
 
@@ -49,8 +51,9 @@ func (t *Tree) Delete(node *Node) error {
     isExtraBlack := node.isBlack && node.left.isBlack
     node.left = nil
     if isExtraBlack {
-      return t.correctDeletion(node)
+      t.correctDeletion(node)
     }
+    t.size--
     return nil
   }
 
@@ -67,15 +70,18 @@ func (t *Tree) Delete(node *Node) error {
         } else {
           successor.parent.right = nil
         }
+        t.size--
         return nil
       }
 
       if successor.isBlack {
         if !node.isBlack {
           node.isBlack = true
-          return nil
+        } else {
+          t.correctDeletion(node)
         }
-        return t.correctDeletion(node)
+        t.size--
+        return nil
       }
     }
 
@@ -83,18 +89,20 @@ func (t *Tree) Delete(node *Node) error {
       successor.parent.left = successor.right
       if !successor.right.isBlack {
         successor.right.isBlack = successor.isBlack
+        t.size--
         return nil
       }
     }
     // Successor and its child are black,
     // or Successor is a Black leaf-node
-    return t.correctDeletion(node)
+    t.correctDeletion(node)
   }
 
+  t.size--
   return nil
 }
 
-func (t *Tree) correctDeletion(node *Node) error {
+func (t *Tree) correctDeletion(node *Node) {
   sibling := node.Sibling()
   // Parent is Red, and Sibling and Nephews are Nil/Black
   if !node.parent.isBlack && sibling.isBlack &&
@@ -103,7 +111,7 @@ func (t *Tree) correctDeletion(node *Node) error {
     // Exchange Parent and Sibling colors
     node.parent.isBlack = true
     sibling.isBlack = false
-    return nil
+    return
   }
 
   // Parent is Red and Sibling is Black,
@@ -113,14 +121,14 @@ func (t *Tree) correctDeletion(node *Node) error {
     if node.isLeftChild && sibling.right != nil && !sibling.right.isBlack {
       t.leftRotate(node.parent)
       sibling.right.isBlack = true
-      return nil
+      return
     }
 
     // Node is Right, Sibling has Red-Left-child
     if !node.isLeftChild && sibling.left != nil && !sibling.left.isBlack {
       t.rightRotate(node.parent)
       sibling.left.isBlack = true
-      return nil
+      return
     }
   }
 
@@ -135,9 +143,10 @@ func (t *Tree) correctDeletion(node *Node) error {
 
       // Root is double-black, make it single-Black and be done
       if parent == t.root {
-        return nil
+        return
       }
-      return t.correctDeletion(sibling.parent)
+      t.correctDeletion(sibling.parent)
+      return
     }
 
     // Left-Sibling
@@ -146,14 +155,14 @@ func (t *Tree) correctDeletion(node *Node) error {
       if sibling.left != nil && !sibling.left.isBlack {
         t.rightRotate(node.parent)
         sibling.left.isBlack = true
-        return nil
+        return
       }
 
       // Sibling has Right-Red-child
       if sibling.right != nil && !sibling.right.isBlack {
         t.leftRightRotate(node.parent)
         sibling.isBlack = true
-        return nil
+        return
       }
     }
 
@@ -163,14 +172,14 @@ func (t *Tree) correctDeletion(node *Node) error {
       if sibling.right != nil && !sibling.right.isBlack {
         t.leftRotate(node.parent)
         sibling.right.isBlack = true
-        return nil
+        return
       }
 
       // Sibling has Left-Red-child
       if sibling.left != nil && !sibling.left.isBlack {
         t.rightLeftRotate(node.parent)
         sibling.isBlack = true
-        return nil
+        return
       }
     }
   }
@@ -181,8 +190,6 @@ func (t *Tree) correctDeletion(node *Node) error {
     } else {
       t.leftRotate(sibling.parent)
     }
-    return t.correctDeletion(node)
+    t.correctDeletion(node)
   }
-
-  return nil
 }

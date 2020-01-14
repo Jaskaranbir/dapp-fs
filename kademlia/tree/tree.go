@@ -6,6 +6,11 @@ import (
 
 type Tree struct {
   root *Node
+  size int
+}
+
+func (t *Tree) Size() int {
+  return t.size
 }
 
 func (t *Tree) String(node *Node) {

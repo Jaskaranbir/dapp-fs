@@ -11,6 +11,7 @@ func (t *Tree) Insert(node *Node) error {
     node.isBlack = true
     t.root = node
     node.tree = t
+    t.size = 1
     return nil
   }
 
@@ -20,6 +21,7 @@ func (t *Tree) Insert(node *Node) error {
   }
 
   node.tree = t
+  t.size++
   return nil
 }
 
