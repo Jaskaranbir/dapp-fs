@@ -83,4 +83,18 @@ var _ = Describe("Tree Delete-Operation", func() {
     Expect(err).ToNot(HaveOccurred())
     Expect(t2.size).To(BeZero())
   })
+
+  It("returns error when node does not exist", func() {
+    err := t.Delete(NewNode(200, nil))
+    Expect(err).To(HaveOccurred())
+	})
+
+	It("handles generic deletion", func() {
+		for k, v := range nodes {
+			t.Delete(v)
+			delete(nodes, k)
+			Expect(verifyTree(t)).To(Succeed())
+			Expect(t.size).To(Equal(len(nodes)))
+		}
+	})
 })
