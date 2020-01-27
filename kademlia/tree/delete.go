@@ -229,6 +229,6 @@ func (t *Tree) correctDeletion(node *Node) error {
   }
 
   return errors.New(
-    "Attempted post-deletion tree-correction but no correction-cases matched",
+    "Attempted to correct tree after node-deletion but no correction-cases matched",
   )
 }
