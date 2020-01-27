@@ -74,7 +74,6 @@ func (t *Tree) rightRotate(grandParent *Node) {
   grandParent.isLeftChild = false
   child.parent = grandParent.parent
   grandParent.parent = child
-  // child.isLeftChild = true
 
   if child.parent == nil {
     t.root = child

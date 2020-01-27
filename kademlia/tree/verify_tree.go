@@ -15,6 +15,10 @@ import (
 // * Right-node has higher key than parent
 // * No duplicate keys
 func verifyTree(t *Tree) error {
+  if t == nil {
+    err := errors.New("tree is nil")
+    return errors.Wrap(err, "failed validating tree")
+  }
   if t.root == nil {
     err := errors.New("root is nil")
     return errors.Wrap(err, "failed validating tree")
@@ -40,7 +44,7 @@ func verifyTree(t *Tree) error {
   }
 
   // Keeps track of black-nodes in path(s)
-  // (1 element = all black nodes in 1 path)
+  // (each element = all black nodes in that path)
   blackCounter := make([]int, 0)
 
   for len(stack) != 0 {
@@ -65,6 +69,19 @@ func verifyTree(t *Tree) error {
       // If left-node is present, visit left-node(s) and then mark path is completed
       // If right-node is present, mark path as completed and visit right-node(s)
       if (!isRevisit && node.left == nil) || (isRevisit && node.right == nil) {
+        blackCount := currStackNode.blackCount
+
+        if len(blackCounter) > 0 {
+          lastBlackCount := blackCounter[len(blackCounter)-1]
+          if blackCount != lastBlackCount {
+            err := fmt.Errorf(
+              "invalid black-count: %v at Node: %v (Expected: %v)",
+              blackCount, node.key, lastBlackCount,
+            )
+            return errors.Wrap(err, "tree-validation failed")
+          }
+        }
+
         blackCounter = append(blackCounter, currStackNode.blackCount)
       }
     }
@@ -106,14 +123,6 @@ func verifyTree(t *Tree) error {
     // Remove last element from slice if leaf
     // node found (or all children visited)
     stack = stack[:len(stack)-1]
-  }
-
-  for i := 1; i < len(blackCounter); i++ {
-    // All paths should have equal black-nodes
-    if blackCounter[i] != blackCounter[i-1] {
-      err := fmt.Errorf("invalid black-count: %v", blackCounter)
-      return errors.Wrap(err, "tree-validation failed")
-    }
   }
 
   return nil

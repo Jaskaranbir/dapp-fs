@@ -3,69 +3,71 @@ package tree
 import (
   . "github.com/onsi/ginkgo"
   . "github.com/onsi/gomega"
+  "log"
 )
 
 var _ = Describe("Tree Delete-Operation", func() {
   var t *Tree
-  // Using map so its easier to select *Node
-  var nodes map[int]*Node
+  // Using map so its easier to select specific *Node
+  var nodeKeys map[int]int
 
   BeforeEach(func() {
     t = &Tree{}
 
     // It will help to use some RB-Tree-visualizer to see
     // node-arrangement for understanding test-cases better
-    nodes = map[int]*Node{
-      0:  NewNode(2, nil),
-      1:  NewNode(34, nil),
-      2:  NewNode(10, nil),
-      3:  NewNode(1, nil),
-      4:  NewNode(-8, nil),
-      5:  NewNode(5, nil),
-      6:  NewNode(50, nil),
-      7:  NewNode(100, nil),
-      8:  NewNode(80, nil),
-      9:  NewNode(-2, nil),
-      10: NewNode(12, nil),
-      11: NewNode(56, nil),
-      12: NewNode(97, nil),
-      13: NewNode(48, nil),
-      14: NewNode(23, nil),
-      15: NewNode(13, nil),
-      16: NewNode(75, nil),
-      17: NewNode(67, nil),
-      18: NewNode(53, nil),
-      19: NewNode(78, nil),
-      20: NewNode(83, nil),
-      21: NewNode(42, nil),
-      22: NewNode(47, nil),
-      23: NewNode(101, nil),
-      24: NewNode(82, nil),
+    nodeKeys = map[int]int{
+      0:  2,
+      1:  34,
+      2:  10,
+      3:  1,
+      4:  8,
+      5:  5,
+      6:  50,
+      7:  100,
+      8:  80,
+      9:  28,
+      10: 12,
+      11: 56,
+      12: 97,
+      13: 48,
+      14: 23,
+      15: 13,
+      16: 75,
+      17: 67,
+      18: 53,
+      19: 78,
+      20: 83,
+      21: 42,
+      22: 47,
+      23: 101,
+      24: 82,
     }
 
     // Push to array since order is important
     // (order affects how the tree is arranged)
-    nodesArr := make([]*Node, len(nodes))
-    for index, node := range nodes {
-      nodesArr[index] = node
+    nodesArr := make([]*Node, len(nodeKeys))
+    for index, key := range nodeKeys {
+      nodesArr[index] = NewNode(key, nil)
     }
     for _, node := range nodesArr {
-      t.Insert(node)
+      err := t.Insert(node)
+      Expect(err).ToNot(HaveOccurred())
     }
     Expect(verifyTree(t)).To(Succeed())
-    Expect(t.size).To(Equal(len(nodes)))
+    Expect(t.Size()).To(Equal(len(nodeKeys)))
   })
 
   It("returns error if node is nil", func() {
     err := t.Delete(nil)
     Expect(err).To(HaveOccurred())
-    Expect(t.size).To(Equal(len(nodes)))
+    Expect(t.Size()).To(Equal(len(nodeKeys)))
   })
 
   It("returns error if node belongs to different tree", func() {
-		t2 := &Tree{}
-		node := NewNode(12, nil)
-		err := t2.Insert(node)
+    t2 := &Tree{}
+    node := NewNode(12, nil)
+    err := t2.Insert(node)
     Expect(err).ToNot(HaveOccurred())
 
     err = t.Delete(node)
@@ -74,9 +76,9 @@ var _ = Describe("Tree Delete-Operation", func() {
   })
 
   It("deletes root-node when tree has only root-node", func() {
-		t2 := &Tree{}
-		node := NewNode(12, nil)
-		err := t2.Insert(node)
+    t2 := &Tree{}
+    node := NewNode(12, nil)
+    err := t2.Insert(node)
     Expect(err).ToNot(HaveOccurred())
 
     err = t2.Delete(node)
@@ -87,14 +89,61 @@ var _ = Describe("Tree Delete-Operation", func() {
   It("returns error when node does not exist", func() {
     err := t.Delete(NewNode(200, nil))
     Expect(err).To(HaveOccurred())
-	})
+  })
 
-	It("handles generic deletion", func() {
-		for k, v := range nodes {
-			t.Delete(v)
-			delete(nodes, k)
-			Expect(verifyTree(t)).To(Succeed())
-			Expect(t.size).To(Equal(len(nodes)))
-		}
-	})
+  It("handles generic deletion", func() {
+    keyTestOrder := []int{
+      17,
+      7,
+      9,
+      15,
+      16,
+      12,
+      18,
+      20,
+      23,
+      1,
+      2,
+      8,
+      11,
+      22,
+      4,
+      5,
+      13,
+      21,
+      14,
+      19,
+      24,
+      0,
+      3,
+      6,
+      10,
+    }
+
+    for _, key := range keyTestOrder {
+      nodeKey := nodeKeys[key]
+
+      node := t.FindNode(nodeKey, t.root)
+      err := t.Delete(node)
+      if err != nil {
+        log.Printf(
+          "Errorred in deletion at Key: %d.\n" +
+            "Attempted Key-order: %v",
+          nodeKey,
+          keyTestOrder,
+        )
+      }
+      Expect(err).ToNot(HaveOccurred())
+      Expect(t.FindNode(nodeKey, t.root)).To(BeNil())
+
+      if t.size > 0 {
+        Expect(verifyTree(t)).To(Succeed())
+      } else {
+        Expect(verifyTree(t)).To(HaveOccurred())
+      }
+
+      delete(nodeKeys, key)
+      Expect(t.Size()).To(Equal(len(nodeKeys)))
+    }
+  })
 })

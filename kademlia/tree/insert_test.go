@@ -27,7 +27,7 @@ var _ = Describe("Tree Insert-Operation", func() {
     Expect(t.root).To(Equal(node))
     Expect(node.isBlack).To(BeTrue())
     Expect(node.tree).To(Equal(t))
-    Expect(t.size).To(Equal(1))
+    Expect(t.Size()).To(Equal(1))
   })
 
   It("balances red-red", func() {
@@ -53,7 +53,7 @@ var _ = Describe("Tree Insert-Operation", func() {
     Expect(err).ToNot(HaveOccurred())
 
     Expect(verifyTree(t)).To(Succeed())
-    Expect(t.size).To(Equal(9))
+    Expect(t.Size()).To(Equal(9))
   })
 
   It("returns error on duplicate insertion", func() {
@@ -71,7 +71,7 @@ var _ = Describe("Tree Insert-Operation", func() {
     Expect(err).ToNot(HaveOccurred())
 
     Expect(verifyTree(t)).To(Succeed())
-    Expect(t.size).To(Equal(3))
+    Expect(t.Size()).To(Equal(3))
   })
 
   It("handles generic insertion", func() {
@@ -116,6 +116,6 @@ var _ = Describe("Tree Insert-Operation", func() {
     }
 
     Expect(verifyTree(t)).To(Succeed())
-    Expect(t.size).To(Equal(len(nodes)))
+    Expect(t.Size()).To(Equal(len(nodes)))
   })
 })

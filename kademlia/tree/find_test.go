@@ -7,7 +7,7 @@ import (
 
 var _ = Describe("Tree Find-Operations", func() {
   var t *Tree
-  // Using map so its easier to select *Node
+  // Using map so its easier to select specific *Node
   var nodes map[int]*Node
 
   BeforeEach(func() {
@@ -53,7 +53,7 @@ var _ = Describe("Tree Find-Operations", func() {
       t.Insert(node)
     }
     Expect(verifyTree(t)).To(Succeed())
-    Expect(t.size).To(Equal(len(nodes)))
+    Expect(t.Size()).To(Equal(len(nodes)))
   })
 
   Describe("FindNode", func() {
