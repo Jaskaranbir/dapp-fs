@@ -9,6 +9,7 @@ import (
 var _ = Describe("Tree Delete-Operation", func() {
   var t *Tree
   // Using map so its easier to select specific *Node
+  // (using map-value (node-key))
   var nodeKeys map[int]int
 
   BeforeEach(func() {
@@ -92,6 +93,7 @@ var _ = Describe("Tree Delete-Operation", func() {
   })
 
   It("handles generic deletion", func() {
+    // Order to delete Nodes using keys
     keyTestOrder := []int{
       17,
       7,
@@ -139,6 +141,7 @@ var _ = Describe("Tree Delete-Operation", func() {
       if t.size > 0 {
         Expect(verifyTree(t)).To(Succeed())
       } else {
+        // Deleting Root-Node
         Expect(verifyTree(t)).To(HaveOccurred())
       }
 
